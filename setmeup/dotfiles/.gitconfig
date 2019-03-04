@@ -1,0 +1,54 @@
+# ~/.gitconfig
+#
+# References:
+#   [01] https://git-scm.com/docs/git-config#_configuration_file
+#   [02] https://github.com/jessfraz/dotfiles/blob/master/.gitconfig
+
+[user]
+	name = Eric Chen
+	email = eric@ericnchen.com
+
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore
+
+	# Treat spaces before tabs and trailing whitespaces as errors. [02]
+	whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+
+[merge]
+	tool = vimdiff
+
+[color]
+	ui = true
+
+[push]
+	default = simple
+
+[apply]
+	# Detect whitespace errors when applying a patch. [02]
+	whitespace = fix
+
+[alias]
+	a = add
+	amend = commit --amend --reuse-message=HEAD
+	br = branch
+	bra = branch --all
+	c = commit
+	co = checkout
+	cob = checkout -b
+	cm = commit --message
+	d = diff
+	do = diff origin
+	f = fetch
+	p = push
+	remotes = remote --verbose
+
+	# With one s, return concise format. With two s, return full status. [02]
+	s = status -s
+	ss = status
+
+	# Show tag names and either "all" of their comments or a single line.
+	taga = tag -a -n100
+	tags = tag -l -n1
+
+	u = pull

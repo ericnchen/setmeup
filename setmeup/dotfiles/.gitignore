@@ -1,0 +1,16 @@
+# ~/.gitignore
+
+# These are global ignores for git that all repositories should ignore.
+
+# JetBrains IDE(s)
+.idea/
+
+# Python
+*.egg-info/
+*.pyc
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
