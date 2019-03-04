@@ -1,0 +1,38 @@
+# ~/.editorconfig
+#
+# References:
+#   [01] https://editorconfig.org
+
+# Special property that should be specified at the top of the file outside of
+# any sections. Set to true to stop searching for .editorconfig files when this
+# root one is found. [01]
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# By default, let's make everything have an indent size of 2 spaces. Everything
+# that deviates from this can be overridden.
+indent_size = 2
+
+# All Makefiles must have tabs. It's just how it is.
+[Makefile]
+tab_width = unset
+indent_size = tab
+indent_style = tab
+
+# reStructuredText files need to have three spaces.
+[*.rst]
+indent_size = 3
+
+# Python files should have four spaces, but let's just let the IDE handle it.
+[*.py]
+indent_size = unset
+
+# Since the CLI git config tool adds tabs, just keep using tabs for git files.
+[*.git{config,ignore}]
+tab_width = unset
+indent_size = tab
+indent_style = tab

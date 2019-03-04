@@ -1,8 +1,0 @@
-# https://editorconfig.org
-
-[Makefile]
-indent_style = tab
-
-[.bashrc]
-indent_size = 2
-indent_style = space
