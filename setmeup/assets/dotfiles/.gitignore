@@ -8,8 +8,9 @@
 # Python
 *.egg-info/
 *.pyc
-
-# Jupyter Notebooks
+.hypothesis/
+.tox/
+.mypy_cache/
 .ipynb_checkpoints/
 
 # macOS
