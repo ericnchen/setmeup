@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
+import json
 import os
 import shutil
 
+from pkg_resources import resource_filename
 
 ASSETDIR = "assets/dotfiles"
-DOTFILES = (
-    ".bash_profile",
-    ".bashrc",
-    ".condarc",
-    ".editorconfig",
-    ".gitconfig",
-    ".gitignore",
-    ".vimrc",
-)
+with open("assets/assets.json", "r") as _f:
+    DOTFILES = json.load(_f)["dotfiles"]
 
 
 def main():
@@ -20,14 +15,14 @@ def main():
 
     print("\nThe following dotfiles will be installed:\n")
     for src, tar in dotfiles:
-        print("\t {} to {}".format(src, tar))
+        print("\t{:13}\tto\t{}".format(src.split(os.sep)[-1], tar))
 
     if input("\nContinue? ").lower() not in ("yes", "y"):
         return
 
     for src, tar in dotfiles:
         print("\nInstalling {} to {} ...".format(src, tar))
-        shutil.copy2(os.path.abspath(os.sep.join([ASSETDIR, src])), tar)
+        shutil.copy2(src, tar)
         print("Installing {} to {} ... done.".format(src, tar))
 
 
@@ -50,12 +45,13 @@ def get_dotfiles_to_install():
     """
     dotfiles_to_install = []
     for fn in DOTFILES:
+        fn_source = resource_filename("setmeup", os.sep.join([ASSETDIR, fn]))
         fn_target = os.path.expanduser(read_target_path(os.sep.join([ASSETDIR, fn])))
         if file_exists(fn_target):
             answer = input("{} already exists. Overwrite it? ".format(fn_target))
             if answer.lower() not in ("yes", "y"):
                 continue
-        dotfiles_to_install.append((fn, fn_target))
+        dotfiles_to_install.append((fn_source, fn_target))
     return dotfiles_to_install
 
 
