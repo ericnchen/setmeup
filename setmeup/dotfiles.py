@@ -3,11 +3,10 @@ import json
 import os
 import shutil
 
-from pkg_resources import resource_filename
+from pkg_resources import resource_filename, resource_string
 
 ASSETDIR = "assets/dotfiles"
-with open("assets/assets.json", "r") as _f:
-    DOTFILES = json.load(_f)["dotfiles"]
+DOTFILES = json.loads(resource_string("setmeup", "assets/assets.json"))
 
 
 def main():
