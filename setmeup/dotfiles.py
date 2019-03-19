@@ -1,15 +1,27 @@
 # -*- coding: utf-8 -*-
 import json
 import os
-import shutil
+from pathlib import Path
 
+import click
 from pkg_resources import resource_filename, resource_string
 
 ASSETDIR = "assets/dotfiles"
 DOTFILES = json.loads(resource_string("setmeup", "assets/assets.json"))
 
 
-def main():
+def main(fn, **kwargs):
+    dotfile = Dotfile(fn)
+
+    click.echo(dotfile.source_path)
+    click.echo(dotfile.target_path)
+    click.echo(dotfile.is_installed())
+
+    click.echo(str(kwargs))
+
+    dotfile.install()
+
+    exit()
     dotfiles = get_dotfiles_to_install()
 
     print("\nThe following dotfiles will be installed:\n")
@@ -21,8 +33,46 @@ def main():
 
     for src, tar in dotfiles:
         print("\nInstalling {} to {} ...".format(src, tar))
-        shutil.copy2(src, tar)
+        # shutil.copy2(src, tar)
         print("Installing {} to {} ... done.".format(src, tar))
+
+
+class Dotfile:
+    def __init__(self, fn):
+        self.filename = fn
+        self.source_path = Path(resource_filename("setmeup", f"assets/dotfiles/{fn}"))
+        self.target_path = Path(read_target_path(self.source_path)).expanduser()
+
+    def is_installed(self):
+        return self.target_path.exists()
+
+    def install(self):
+        choice = click.prompt(
+            f"Install {self.filename} to {self.target_path}",
+            default="yes",
+            type=click.Choice(["yes", "no"]),
+        )
+        if choice == "no":
+            click.echo(f"Skipping install for {self.filename}.")
+            return 0
+
+        if self.is_installed():
+            choice = click.prompt(
+                f"Dotfile {self.filename} exists. Replace it?",
+                default="no",
+                type=click.Choice(["yes", " no"]),
+            )
+            if choice == "no":
+                click.echo(f"Skipping install for {self.filename}.")
+                return 0
+            if self.target_path.is_file():
+                os.remove(self.target_path)
+            elif self.target_path.is_symlink():
+                self.target_path.unlink()
+
+        self.target_path.symlink_to(self.source_path)
+
+        click.echo(f"you chose {choice}")
 
 
 def read_target_path(filepath):

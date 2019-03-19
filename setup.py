@@ -19,7 +19,8 @@ setup(
     license="MIT",
     packages=["setmeup"],
     python_requires=">=3.7, <4",
-    install_requires=[""],
+    install_requires=["click"],
     package_data={"setmeup": assets},
     include_package_data=True,
+    entry_points={"console_scripts": ["setmeup = setmeup.cli:cli"]},
 )
