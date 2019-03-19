@@ -30,7 +30,7 @@ def get_dotfiles_to_install():
     for fn in DOTFILES:
         fn_target = os.path.expanduser(read_target_path(os.sep.join([ASSETDIR, fn])))
         if file_exists(fn_target):
-            answer = raw_input("{} already exists. Overwrite it? ".format(fn_target))
+            answer = input("{} already exists. Overwrite it? ".format(fn_target))
             if answer.lower() not in ("yes", "y"):
                 continue
         dotfiles_to_install.append((fn, fn_target))
@@ -44,7 +44,7 @@ def main():
     for src, tar in dotfiles:
         print("\t {} to {}".format(src, tar))
 
-    if raw_input("\nContinue? ").lower() not in ("yes", "y"):
+    if input("\nContinue? ").lower() not in ("yes", "y"):
         return
 
     for src, tar in dotfiles:
