@@ -22,7 +22,7 @@ def main():
     for src, tar in dotfiles:
         print("\t {} to {}".format(src, tar))
 
-    if raw_input("\nContinue? ").lower() not in ("yes", "y"):
+    if input("\nContinue? ").lower() not in ("yes", "y"):
         return
 
     for src, tar in dotfiles:
