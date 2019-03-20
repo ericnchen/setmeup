@@ -88,7 +88,7 @@ alias dkcu="docker-compose up"
 alias grep="grep --color=auto --line-number"
 
 # The color flag is different depending on the OS.
-if [[ "${OSTYPE}" == "darwin*" ]]; then
+if [[ "${OSTYPE}" == "darwin18" ]]; then
   colorflag="-G"
 elif [[ "${OSTYPE}" == "linux-gnu" ]]; then
   colorflag="--color=auto"
@@ -99,7 +99,7 @@ alias la="ls ${colorflag} -Fla"
 alias lt="ls ${colorflag} -Flat"
 
 # Alias to open a file from the terminal.
-if [[ "${OSTYPE}" == "darwin*" ]]; then
+if [[ "${OSTYPE}" == "darwin18" ]]; then
   alias op="open"
 elif [[ "${OSTYPE}" == "linux-gnu" ]]; then
   alias op=""xdg-open""
