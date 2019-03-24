@@ -14,5 +14,7 @@ setup(
     python_requires=">=3.7, <4",
     install_requires=["click"],
     include_package_data=True,
-    entry_points={"console_scripts": ["setmeup = setmeup:main"]},
+    entry_points={
+        "console_scripts": ["setmeup = setmeup:main", "dtf = setmeup.cli:main"]
+    },
 )
