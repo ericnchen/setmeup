@@ -1,7 +1,7 @@
-include setmeup/dotfiles/.bash_profile
-include setmeup/dotfiles/.bashrc
-include setmeup/dotfiles/.condarc
-include setmeup/dotfiles/.editorconfig
-include setmeup/dotfiles/.gitconfig
-include setmeup/dotfiles/.gitignore
-include setmeup/dotfiles/.vimrc
+include dtf/dotfiles/.bash_profile
+include dtf/dotfiles/.bashrc
+include dtf/dotfiles/.condarc
+include dtf/dotfiles/.editorconfig
+include dtf/dotfiles/.gitconfig
+include dtf/dotfiles/.gitignore
+include dtf/dotfiles/.vimrc
