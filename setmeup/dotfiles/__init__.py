@@ -1,29 +1,66 @@
 # -*- coding: utf-8 -*-
-import subprocess
-from pathlib import Path
-from typing import Any, List
+from __future__ import annotations
+
+import pathlib
+from typing import Any
 
 import click
-from pkg_resources import resource_filename, resource_listdir
+from pkg_resources import resource_filename
 
-IGNORED = "__init__.py", "__pycache__"
+
+class PathDescriptor:
+    __slots__ = "name"
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def __get__(self, obj: Dotfile, objtype: Any) -> pathlib.Path:
+        if self.name not in ["source", "target"]:
+            raise RuntimeError
+        return self.source(obj) if self.name == "source" else self.target(obj)
+
+    def __set__(self, obj: Any, val: Any) -> None:
+        raise AttributeError
+
+    @staticmethod
+    def source(obj: Dotfile) -> pathlib.Path:
+        """Return a Path object to the source file."""
+        return pathlib.Path(resource_filename(__name__, obj.name))
+
+    def target(self, obj: Dotfile) -> pathlib.Path:
+        """Return a Path object to the target file."""
+        with self.source(obj).open() as f:
+            p = f.readline()
+        return pathlib.Path(p.rstrip().split(" ")[-1]).expanduser()
+
+
+class DotfileInstaller:
+    def __init__(self, dry_run: bool = False) -> None:
+        self.dry_run = dry_run
+
+    @staticmethod
+    def message(dotfile: Dotfile) -> str:
+        return f"Installing {dotfile.name} to {dotfile.source.resolve()} ..."
+
+    def install(self, dotfile: Dotfile) -> None:
+        if self.dry_run:
+            return self.install_dry_run(dotfile)
+        click.echo(self.message(dotfile))
+        dotfile.target.write_text(dotfile.source.read_text())
+
+    def install_dry_run(self, dotfile: Dotfile) -> None:
+        click.echo(f"[DRY RUN] {self.message(dotfile)}")
 
 
 class Dotfile:
-    def __init__(self, fn: str) -> None:
-        self.filename = fn
+    source = PathDescriptor("source")
+    target = PathDescriptor("target")
 
-    @property
-    def source(self) -> Path:
-        """Return a Path object to the source file."""
-        return Path(resource_filename(__name__, self.filename))
+    def __init__(self, name: str) -> None:
+        self.name = name
 
-    @property
-    def target(self) -> Path:
-        """Return a Path object to the target file."""
-        with self.source.open() as f:
-            p = f.readline()
-        return Path(p.rstrip().split(" ")[-1]).expanduser()
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}('{self.name}')"
 
     def is_installed(self) -> bool:
         """Check if the dotfile has been installed to the target path."""
@@ -31,123 +68,16 @@ class Dotfile:
 
     def install(self, **kwargs: Any) -> None:
         """Install this dotfile to the appropriate target path."""
-        msg = f"Installing {self.filename} to {self.source.resolve()} ..."
-
-        if kwargs.get("dry_run"):
-            click.echo(f"[DRY RUN] {msg}")
-            return
-
-        click.echo(msg)
-        self.target.write_text(self.source.read_text())
+        installer = DotfileInstaller(kwargs.get("dry_run", False))
+        installer.install(self)
 
 
-def list_dotfiles() -> List[str]:
-    """Return a tuple of all provided dotfiles."""
-    dfs = [fn for fn in resource_listdir(__name__, "") if fn not in IGNORED]
-    return sorted(dfs)
+bash_profile = Dotfile(".bash_profile")
+bashrc = Dotfile(".bashrc")
+condarc = Dotfile(".condarc")
+editorconfig = Dotfile(".editorconfig")
+gitconfig = Dotfile(".gitconfig")
+gitignore = Dotfile(".gitignore")
+vimrc = Dotfile(".vimrc")
 
-
-def collect_dotfiles(dotfiles: List[Dotfile], **kwargs: Any) -> List[Dotfile]:
-    if kwargs.get("confirm_yes"):
-        return dotfiles
-
-    collected = []
-    for df in dotfiles:
-        choice = True
-        if df.is_installed():
-            choice = click.confirm(f"Replace existing {df.filename}?")
-        if choice is False:
-            continue
-        collected.append(df)
-    return collected
-
-
-@click.group(name="dotfiles")
-def dotfiles_main():
-    pass
-
-
-def list_available() -> None:
-    click.echo("The following dotfiles are available:")
-    for fn in list_dotfiles():
-        click.echo(f"\t{click.format_filename(fn)}")
-
-
-def list_installed(show_path: bool = False) -> None:
-    click.echo("The following dotfiles are installed:")
-    for fn in list_dotfiles():
-        df = Dotfile(fn)
-        if df.target.exists():
-            fp = str(df.target) if show_path else fn
-            click.echo(f"\t{click.format_filename(fp)}")
-
-
-def list_not_installed() -> None:
-    click.echo("The following dotfiles are not installed:")
-    for fn in list_dotfiles():
-        df = Dotfile(fn)
-        if df.target.exists():
-            continue
-        click.echo(f"\t{click.format_filename(fn)}")
-
-
-@click.command(name="list")
-@click.option("--show-path", is_flag=True)
-@click.option("--installed", is_flag=True)
-@click.option("--not-installed", is_flag=True)
-@click.pass_context
-def dotfiles_list(ctx: click.Context, **kwargs) -> None:
-    """List available and/or installed dotfiles."""
-    if kwargs["installed"]:
-        list_installed(show_path=kwargs["show_path"])
-    elif kwargs["not_installed"]:
-        list_not_installed()
-    else:
-        list_available()
-    ctx.exit()
-
-
-help_all = "Install all dotfiles."
-help_dry = "Execute the installation but without installing anything."
-help_yes = "Automatically confirm all prompts with yes."
-
-dotfile_choices = click.Choice(list_dotfiles())
-
-
-@click.command(name="install")
-@click.argument("fn", nargs=-1, type=dotfile_choices, metavar="<filename>...")
-@click.option("-a", "--all", "install_all", help=help_all, is_flag=True)
-@click.option("-y", "--yes", "confirm_yes", help=help_yes, is_flag=True)
-@click.option("--dry-run", help=help_dry, is_flag=True)
-@click.pass_context
-def dotfiles_install(ctx, fn, **kwargs) -> None:
-    """Install a dotfile or multiple dotfiles."""
-    if kwargs.get("install_all"):
-        fn = list_dotfiles()
-    collected = collect_dotfiles([Dotfile(f) for f in fn], **kwargs)
-    if len(collected) == 0:
-        click.echo("Nothing to install.")
-        ctx.exit()
-    if kwargs.get("confirm_yes"):
-        pass
-    else:
-        click.confirm(f"Installing {len(collected)} dotfiles. Proceed?", abort=True)
-    [df.install(**kwargs) for df in collected]
-    ctx.exit()
-
-
-ctx_diff_kwds = {"ignore_unknown_options": True, "allow_extra_args": True}
-
-
-@click.command(name="diff", context_settings=ctx_diff_kwds)
-@click.argument("fn", type=dotfile_choices, metavar="<filename>")
-@click.pass_context
-def dotfiles_diff(ctx: click.Context, fn: str, **kwargs: Any) -> None:
-    df = Dotfile(fn)
-    subprocess.call(["diff", *ctx.args, str(df.source), str(df.target)])
-    ctx.exit()
-
-
-dotfiles_main.add_command(dotfiles_diff)
-dotfiles_main.add_command(dotfiles_list)
-dotfiles_main.add_command(dotfiles_install)
+all_dotfiles = [v for v in dict(locals()).values() if isinstance(v, Dotfile)]

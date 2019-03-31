@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 setup(
@@ -10,11 +10,9 @@ setup(
     author="Eric Chen",
     author_email="eric@ericnchen.com",
     license="MIT",
-    packages=find_packages(),
+    packages=["setmeup", "setmeup.dotfiles"],
     python_requires=">=3.7, <4",
     install_requires=["click"],
     include_package_data=True,
-    entry_points={
-        "console_scripts": ["setmeup = setmeup:main", "dtf = setmeup.cli:main"]
-    },
+    entry_points={"console_scripts": ["dtf = setmeup.cli:main"]},
 )
