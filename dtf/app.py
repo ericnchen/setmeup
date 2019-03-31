@@ -29,7 +29,7 @@ INSTALL_PATH = pathlib.Path(XDG_CONFIG_HOME).expanduser() / "dtf"
 
 
 @click.group(name="dtf")
-def main() -> None:
+def cli() -> None:
     return
 
 
@@ -158,4 +158,4 @@ def symlink(installed: Dotfiles) -> Dotfiles:
     return symlinked
 
 
-main.add_command(dtf_install)
+cli.add_command(dtf_install)

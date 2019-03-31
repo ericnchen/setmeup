@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import setmeup.dotfiles
+import dtf.dotfiles
 
 
 def test_dotfiles_are_importable():
-    assert setmeup.dotfiles.bash_profile.name == ".bash_profile"
-    assert setmeup.dotfiles.bashrc.name == ".bashrc"
-    assert setmeup.dotfiles.condarc.name == ".condarc"
-    assert setmeup.dotfiles.editorconfig.name == ".editorconfig"
-    assert setmeup.dotfiles.gitconfig.name == ".gitconfig"
-    assert setmeup.dotfiles.gitignore.name == ".gitignore"
-    assert setmeup.dotfiles.vimrc.name == ".vimrc"
+    assert dtf.dotfiles.bash_profile.name == ".bash_profile"
+    assert dtf.dotfiles.bashrc.name == ".bashrc"
+    assert dtf.dotfiles.condarc.name == ".condarc"
+    assert dtf.dotfiles.editorconfig.name == ".editorconfig"
+    assert dtf.dotfiles.gitconfig.name == ".gitconfig"
+    assert dtf.dotfiles.gitignore.name == ".gitignore"
+    assert dtf.dotfiles.vimrc.name == ".vimrc"

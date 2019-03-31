@@ -3,16 +3,16 @@ from setuptools import setup
 
 
 setup(
-    name="setmeup",
+    name="dtf",
     version="0.1.0",
-    description="tools to help me set up a new computer",
-    url="https://github.com/ericnchen/setmeup",
+    description="dtf is my personal dotfile manager.",
+    url="https://github.com/ericnchen/dtf",
     author="Eric Chen",
     author_email="eric@ericnchen.com",
     license="MIT",
-    packages=["setmeup", "setmeup.dotfiles"],
+    packages=["dtf", "dtf.dotfiles"],
     python_requires=">=3.7, <4",
     install_requires=["click"],
     include_package_data=True,
-    entry_points={"console_scripts": ["dtf = setmeup.cli:main"]},
+    entry_points={"console_scripts": ["dtf = dtf.app:cli"]},
 )

@@ -4,11 +4,12 @@ from __future__ import annotations
 import pathlib
 from typing import Any
 
-import click
 from pkg_resources import resource_filename
 
 
 class PathDescriptor:
+    """Source and target path descriptor."""
+
     __slots__ = "name"
 
     def __init__(self, name: str) -> None:
@@ -34,24 +35,6 @@ class PathDescriptor:
         return pathlib.Path(p.rstrip().split(" ")[-1]).expanduser()
 
 
-class DotfileInstaller:
-    def __init__(self, dry_run: bool = False) -> None:
-        self.dry_run = dry_run
-
-    @staticmethod
-    def message(dotfile: Dotfile) -> str:
-        return f"Installing {dotfile.name} to {dotfile.source.resolve()} ..."
-
-    def install(self, dotfile: Dotfile) -> None:
-        if self.dry_run:
-            return self.install_dry_run(dotfile)
-        click.echo(self.message(dotfile))
-        dotfile.target.write_text(dotfile.source.read_text())
-
-    def install_dry_run(self, dotfile: Dotfile) -> None:
-        click.echo(f"[DRY RUN] {self.message(dotfile)}")
-
-
 class Dotfile:
     source = PathDescriptor("source")
     target = PathDescriptor("target")
@@ -61,15 +44,6 @@ class Dotfile:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}('{self.name}')"
-
-    def is_installed(self) -> bool:
-        """Check if the dotfile has been installed to the target path."""
-        return self.target.exists()
-
-    def install(self, **kwargs: Any) -> None:
-        """Install this dotfile to the appropriate target path."""
-        installer = DotfileInstaller(kwargs.get("dry_run", False))
-        installer.install(self)
 
 
 bash_profile = Dotfile(".bash_profile")
