@@ -97,6 +97,7 @@ alias ls="ls ${colorflag} -F"
 alias ll="ls ${colorflag} -Fl"
 alias la="ls ${colorflag} -Fla"
 alias lt="ls ${colorflag} -Flat"
+alias llh="ls ${colorflag} -Flh"
 
 # Alias to open a file from the terminal.
 if [[ "${OSTYPE}" == "darwin18" ]]; then
