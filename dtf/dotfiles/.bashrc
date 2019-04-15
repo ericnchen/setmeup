@@ -62,8 +62,13 @@ export PS1="\[\e[01;32m\]\h\[\033[00m\]:\[\033[01;34m\]\w \$\[\033[00m\] "
 export BASE16_SHELL="${HOME}/.config/base16-shell"
 
 # Now if base16 shell is installed, then use it.
+# Special treatment for running within JetBrains products (do nothing).
 if [[ -e "${BASE16_SHELL}/profile_helper.sh" ]]; then
-  eval "$(${BASE16_SHELL}/profile_helper.sh)"
+  if [[ "${TERMINAL_EMULATOR}" == "JetBrains-"* ]]; then
+    :
+  else
+    eval "$(${BASE16_SHELL}/profile_helper.sh)"
+  fi
 fi
 
 # Explicitly set umask since it isn't set on WSL.
@@ -103,7 +108,7 @@ alias llh="ls ${colorflag} -Flh"
 if [[ "${OSTYPE}" == "darwin18" ]]; then
   alias op="open"
 elif [[ "${OSTYPE}" == "linux-gnu" ]]; then
-  alias op=""xdg-open""
+  alias op="xdg-open"
 fi
 
 alias tmls="tmux -2u ls"
