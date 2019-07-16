@@ -92,7 +92,7 @@ pathprepend "${HOME}/bin" "${HOME}/.local/bin"
 pathprepend "${HOME}/miniconda3/bin"
 
 # Add the following path to PATH for MacPorts.
-pathprepend "/opt/local/bin" "/opt/local/sbin"
+pathprepend "/opt/local/sbin" "/opt/local/bin"
 
 # Add the following for poetry, a Python packaging tool.
 pathprepend "${HOME}/.poetry/bin"

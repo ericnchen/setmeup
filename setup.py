@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="dtf",
-    version="0.1.2",
+    version="0.1.3",
     description="dtf is my personal dotfile manager.",
     url="https://github.com/ericnchen/dtf",
     author="Eric Chen",
