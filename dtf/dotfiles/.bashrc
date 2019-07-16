@@ -19,6 +19,17 @@ pathappend() {
   done
 }
 
+# Same as pathappend(), but prepend.
+# The :+ in the expansion means: if LHS is set, then expand RHS, else, nothing.
+pathprepend() {
+  for ARG in "$@"
+  do
+    if [[ -d "$ARG" ]] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+        PATH="$ARG${PATH:+":$PATH"}"
+    fi
+  done
+}
+
 export HISTSIZE=1000
 export HISTFILESIZE=2000
 
@@ -75,10 +86,16 @@ fi
 umask 0022
 
 # Add common personal bin directories to the $PATH.
-pathappend "${HOME}/bin" "${HOME}/.local/bin"
+pathprepend "${HOME}/bin" "${HOME}/.local/bin"
 
 # Add the miniconda directory to $PATH
-pathappend "${HOME}/miniconda3/bin"
+pathprepend "${HOME}/miniconda3/bin"
+
+# Add the following path to PATH for MacPorts.
+pathprepend "/opt/local/bin" "/opt/local/sbin"
+
+# Add the following for poetry, a Python packaging tool.
+pathprepend "${HOME}/.poetry/bin"
 
 alias qq="exit"
 alias clc="clear"
