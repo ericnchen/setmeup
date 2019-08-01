@@ -135,3 +135,4 @@ alias tmat="tmux -2u attach -d -t"
 # Anaconda related.
 alias sac="source activate"
 alias csearch="conda search"
+alias cenv37="conda create --no-default-packages python=3.7 -n"
