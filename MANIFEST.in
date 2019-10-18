@@ -1,7 +1,0 @@
-include dtf/dotfiles/.bash_profile
-include dtf/dotfiles/.bashrc
-include dtf/dotfiles/.condarc
-include dtf/dotfiles/.editorconfig
-include dtf/dotfiles/.gitconfig
-include dtf/dotfiles/.gitignore
-include dtf/dotfiles/.vimrc

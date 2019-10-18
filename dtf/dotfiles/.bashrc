@@ -110,7 +110,7 @@ alias dkcu="docker-compose up"
 alias grep="grep --color=auto --line-number"
 
 # The color flag is different depending on the OS.
-if [[ "${OSTYPE}" == "darwin18" ]]; then
+if [[ "${OSTYPE}" == "darwin19" ]]; then
   colorflag="-G"
 elif [[ "${OSTYPE}" == "linux-gnu" ]]; then
   colorflag="--color=auto"
@@ -122,7 +122,7 @@ alias lt="ls ${colorflag} -Flat"
 alias llh="ls ${colorflag} -Flh"
 
 # Alias to open a file from the terminal.
-if [[ "${OSTYPE}" == "darwin18" ]]; then
+if [[ "${OSTYPE}" == "darwin19" ]]; then
   alias op="open"
 elif [[ "${OSTYPE}" == "linux-gnu" ]]; then
   alias op="xdg-open"
@@ -136,3 +136,8 @@ alias tmat="tmux -2u attach -d -t"
 alias sac="source activate"
 alias csearch="conda search"
 alias cenv37="conda create --no-default-packages python=3.7 -n"
+
+# Things added by/for Serverless.
+[ -f "${HOME}/.config/yarn/global/node_modules/tabtab/.completions/serverless.bash" ] && . "${HOME}/.config/yarn/global/node_modules/tabtab/.completions/serverless.bash"
+[ -f "${HOME}/.config/yarn/global/node_modules/tabtab/.completions/sls.bash" ] && . "${HOME}/.config/yarn/global/node_modules/tabtab/.completions/sls.bash"
+[ -f "${HOME}/.config/yarn/global/node_modules/tabtab/.completions/slss.bash" ] && . "${HOME}/.config/yarn/global/node_modules/tabtab/.completions/slss.bash"
