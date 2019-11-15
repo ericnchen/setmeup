@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dtf"
-version = "0.1.6"
+version = "0.1.7"
 description = "dtf is my personal dotfile manager."
 license = "MIT"
 authors = ["Eric Chen <eric@ericnchen.com>"]
