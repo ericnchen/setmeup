@@ -135,6 +135,7 @@ alias tmat="tmux -2u attach -d -t"
 # Anaconda related.
 alias csearch="conda search"
 alias cenv37="conda create --no-default-packages python=3.7 -n"
+alias cenvs="conda env list"
 # Activate the given conda environment, or assume the current directory if not given.
 function sac { source activate "${1:-$(basename "$PWD")}"; }; export -f sac
 
